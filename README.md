@@ -9,3 +9,16 @@ docker run --rm -p 80:80 -p 443:443 --name nginx nginx:stable-alpine3.23
 - El flag '--rm' elimina el contener al cerrar el proceso o detener el contenedor.
 
 Al abrir el navegador en 'localhost' verás la bienvenida de nginx.
+
+## Archivos de configuración
+Las carpetas principales de configuracion están en '/etc/nginx/conf.d' los sitios (Virtual Host) que nginx va a proveer. Y '/usr/share/nginx' la respuesta a esos sitios, el html que va a devolver. Un ejemplo es la bienvenida de nginx.
+Para los ejercicios voy a mapear estás carpetas a los paths para tener persistencia de las configuraciones.
+
+En la raiz del proyecto voy a crear las siguientes carpetas 'server/conf.d' y 'server/nginx', dentro de conf.d estará el archivo 'default.conf' y en la carpeta nginx estará 'html/index.html' que previamente copie del contenedor. 
+
+Después volvemos a ejecutar el contenedor con volumenes asignados a esas ruta y validamos que siga funcionando.
+
+``` bash
+docker run --rm -p 80:80 -p 443:443 -v ./conf.d:/etc/nginx/conf.d -v ./nginx:/usr/share nginx --name nginx nginx:stable-alpine3.23
+```
+

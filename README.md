@@ -22,6 +22,10 @@ Después volvemos a ejecutar el contenedor con volumenes asignados a esas ruta y
 docker run --rm -p 80:80 -p 443:443 -v ./conf.d:/etc/nginx/conf.d -v ./nginx:/usr/share nginx --name nginx nginx:stable-alpine3.23
 ```
 
+## Varios sitios
+En la carpeta de configuración voy a copiar el archivo 'default.conf' y lo voy a pegar con el nombre 'apache.conf', en la directiva de `'server_name'` voy a pegar el valor de uno de los `'Virtual Host'` que he creado 'apache.app.test' y en la directiva `'root'` voy a poner el siguiente valor '/usr/share/nginx/apache'. Haré lo mismo con el 'default.conf' con los siguientes datos 'test.domain' y '/usr/share/nginx/foo'. Dentro de las carpetas 'foo' y 'apache' debe haber un archivo llamado 'index.html'.
+Después de realizar los pasos anteriores reiniciamos el servidor y al consultar los dominios deberíamos ver diferentes respuestas.
+
 # Tips
 Para simular el ejercicio visitando una URL como 'web.test' o 'app.test' como dominio, en el archivo `'/etc/hosts'` en una mac, al final del archivo agregamos los siguientes datos:
 

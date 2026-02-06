@@ -19,7 +19,7 @@ En la raiz del proyecto voy a crear las siguientes carpetas `'server/conf.d'` y 
 Después volvemos a ejecutar el contenedor con volumenes asignados a esas ruta y validamos que siga funcionando.
 
 ``` bash
-docker run --rm -p 80:80 -p 443:443 -v ./conf.d:/etc/nginx/conf.d -v ./nginx:/usr/share nginx --name nginx nginx:stable-alpine3.23
+docker run --rm -p 80:80 -p 443:443 -v ./server/conf.d:/etc/nginx/conf.d -v ./server/nginx:/usr/share/nginx --name nginx nginx:stable-alpine3.23
 ```
 
 ## Varios sitios
@@ -41,3 +41,14 @@ nginx -s reload
 ```
 
 al visital el `Virtual Host` que has creado, deberías seguir obteniendo la misma respuesta.
+
+# Extra
+Debes tener en cuenta que si tienes varias configuraciones, nginx tomará la primera que aparezca, en caso de poner un domain que no exista, ejemplo:
+ - tienes dos archivos, 'apache.conf' y 'default.conf', por orden apache va primero y toma esa configuración, entonces deberías ver 'Apache' en el navegador
+
+Si tienes alguna configuración por default y quieres que la respete, editas ese archivo de configuración en la directiva de listen después del puerto agregas 'default_server', guardas y reinicias el servidor otra vez y listo, tienes 'Hola' como respuesta.
+
+# pendientes
+
+Al crear el contenedor le asignaré dos volumenes para tener la persistencia de esos datos (archivos de configuración y las vistas que mostrará) con el siguiente comando:
+

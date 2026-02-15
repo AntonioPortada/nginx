@@ -26,6 +26,10 @@ docker run --rm -p 80:80 -p 443:443 -v ./server/conf.d:/etc/nginx/conf.d -v ./se
 En la carpeta de configuración voy a copiar el archivo 'default.conf' y lo voy a pegar con el nombre 'apache.conf', en la directiva de `'server_name'` voy a pegar el valor de uno de los `'Virtual Host'` que he creado 'apache.app.test' y en la directiva `'root'` voy a poner el siguiente valor '/usr/share/nginx/apache'. Haré lo mismo con el 'default.conf' con los siguientes datos 'test.domain' y '/usr/share/nginx/foo'. Dentro de las carpetas 'foo' y 'apache' debe haber un archivo llamado 'index.html'.
 Después de realizar los pasos anteriores reiniciamos el servidor y al consultar los dominios deberíamos ver diferentes respuestas.
 
+## Página de error
+Primero voy a crear en la carpeta `'/usr/share/nginx/foo'` el archivo 'error.html' con el siguiente contenido: '404 No Found Page' y guardamos.
+En el archivo 'default.conf' al final de la directiva 'server' voy a agregar la siguiente linea `'error_page 404 /error.html'`, la directiva 'error_page' recibe como parámetros el código de error '404' y déspues el archivo 'error.html' a devolver, dado que en el contexto 'nginx' entiende que ya estamos en la carpeta con la directiva 'root' solo hacemos referencia al archivo.
+
 # Tips
 Para simular el ejercicio visitando una URL como 'web.test' o 'app.test' como dominio, en el archivo `'/etc/hosts'` en una mac, al final del archivo agregamos los siguientes datos:
 
@@ -47,8 +51,4 @@ Debes tener en cuenta que si tienes varias configuraciones, nginx tomará la pri
  - tienes dos archivos, 'apache.conf' y 'default.conf', por orden apache va primero y toma esa configuración, entonces deberías ver 'Apache' en el navegador
 
 Si tienes alguna configuración por default y quieres que la respete, editas ese archivo de configuración en la directiva de listen después del puerto agregas 'default_server', guardas y reinicias el servidor otra vez y listo, tienes 'Hola' como respuesta.
-
-# pendientes
-
-Al crear el contenedor le asignaré dos volumenes para tener la persistencia de esos datos (archivos de configuración y las vistas que mostrará) con el siguiente comando:
 

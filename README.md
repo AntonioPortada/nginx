@@ -79,9 +79,4 @@ Debes tener en cuenta que si tienes varias configuraciones, nginx tomará la pri
 
 Si tienes alguna configuración por default y quieres que la respete, editas ese archivo de configuración en la directiva de listen después del puerto agregas 'default_server', guardas y reinicias el servidor otra vez y listo, tienes 'Hola' como respuesta.
 
-# pendientes
-
-+ * + * el video de location para proteger rutas
-
-Al crear el contenedor le asignaré dos volumenes para tener la persistencia de esos datos (archivos de configuración y las vistas que mostrará) con el siguiente comando:
-
+En la ruta `'/var/log/nginx/error.log'` se encuentran los logs del servidor.

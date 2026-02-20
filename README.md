@@ -33,6 +33,27 @@ En el archivo 'default.conf' al final de la directiva 'server' voy a agregar la 
 ## Location
 La directiva `'location'` sirve para mapear una ruta específica que nosotros quieramos. Ya sea para autenticar usuarios, una redirección, etc...
 
+## Proxy Reversivo (Reverse Proxy)
+Nginx va a actuar como un proxy, en el caso de un 'proxy reversivo', se va a encargar de redirigir el tráfico a los servidores (ips, dominios) y devolver la respuesta al cliente que ha realizado la petición.
+Ya que todo está siendo realizado usando docker, voy a crear otros dos contenedores con un servidor apache y otro nginx, el contenedor apache será mapeado al puerto 8080 y el nginx al 8081.
+
+``` bash
+docker run -dp 8080:80 --name apache httpd && docker run -dp 8081:80 --name nginx-serve nginx
+``` 
+
+Después pegamos lo siguiente en el `'default.conf'` antes de la directiva `error_page`:
+
+```
+  location /apache {
+    proxy_pass http://host.docker.internal:8080/;
+  }
+
+  location /nginx {
+    proxy_pass http://host.docker.internal:8081/;
+  }
+``` 
+
+Finalmente reiniciamos nuetro servidor nginx y listo, en el navegador prueba con 'http://nombre_dominio/apache' y 'http://nombre_dominio/nginx', deberías ver las salidas correspondientes a cada ruta. (nombre_dominio es el valor que va después de la directiva 'server_name' en el default.conf)
 
 # Tips
 Para simular el ejercicio visitando una URL como 'web.test' o 'app.test' como dominio, en el archivo `'/etc/hosts'` en una mac, al final del archivo agregamos los siguientes datos:
@@ -50,8 +71,17 @@ nginx -s reload
 
 al visital el `Virtual Host` que has creado, deberías seguir obteniendo la misma respuesta.
 
+Dado que todo esta ejecutandose desde docker y nos estamos conectando entre contenedores, para que docker sepa como buscar y conectarse debemos usar la ruta `'host.docker.internal'`
+
 # Extra
 Debes tener en cuenta que si tienes varias configuraciones, nginx tomará la primera que aparezca, en caso de poner un domain que no exista, ejemplo:
  - tienes dos archivos, 'apache.conf' y 'default.conf', por orden apache va primero y toma esa configuración, entonces deberías ver 'Apache' en el navegador
 
 Si tienes alguna configuración por default y quieres que la respete, editas ese archivo de configuración en la directiva de listen después del puerto agregas 'default_server', guardas y reinicias el servidor otra vez y listo, tienes 'Hola' como respuesta.
+
+# pendientes
+
++ * + * el video de location para proteger rutas
+
+Al crear el contenedor le asignaré dos volumenes para tener la persistencia de esos datos (archivos de configuración y las vistas que mostrará) con el siguiente comando:
+

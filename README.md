@@ -106,3 +106,20 @@ Debes tener en cuenta que si tienes varias configuraciones, nginx tomará la pri
 Si tienes alguna configuración por default y quieres que la respete, editas ese archivo de configuración en la directiva de listen después del puerto agregas 'default_server', guardas y reinicias el servidor otra vez y listo, tienes 'Hola' como respuesta.
 
 En la ruta `'/var/log/nginx/error.log'` se encuentran los logs del servidor.
+
+Antes de consultar el balanceo se deben crear 4 contenedores más para simular los servidores. Con el siguiente comando ejecutas los 4 y como ejercicio voy a cambiar la respuesta de cada uno a servidor 1, servidor 2, etc ...
+
+```bash
+docker run --rm -dp 8090:80 --name server_one nginx:stable-alpine3.23 && \
+docker run --rm -dp 8091:80 --name server_two nginx:stable-alpine3.23 && \
+docker run --rm -dp 8092:80 --name server_tree nginx:stable-alpine3.23 && \
+docker run --rm -dp 8093:80 --name server_four nginx:stable-alpine3.23
+```
+
+Al agregar el balanceador de cargas se puede dar un peso o carga a un servidor específico. Si nuestro servidor principal tiene más recursos y es más potente; haremos que se cargue más veces para aprovecharlo.
+
+```
+server host.docker.internal:8090 weight=4;
+```
+
+Con la configuración anterior, cada que actualicemos, entre el orden de los servidores va a salir el servidor uno.

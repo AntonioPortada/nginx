@@ -55,6 +55,32 @@ Después pegamos lo siguiente en el `'default.conf'` antes de la directiva `erro
 
 Finalmente reiniciamos nuetro servidor nginx y listo, en el navegador prueba con 'http://nombre_dominio/apache' y 'http://nombre_dominio/nginx', deberías ver las salidas correspondientes a cada ruta. (nombre_dominio es el valor que va después de la directiva 'server_name' en el default.conf)
 
+## Balanceador de cargas
+Nginx también sirve como balanceador de cargas, en este ejercicio voy a editar el 'default.conf' para hacer este ejercicio, la directiva nueva a usar es `'upstream'`, después de la directiva se coloca un nombre que será como la variable que contiene los servidores. Cabe mencionar que estamos usando docker para esto, por eso se usa de la siguiente forma.
+
+```
+upstream backend {
+
+  server host.docker.internal:8090;
+  server host.docker.internal:8091;
+  server host.docker.internal:8092;
+  server host.docker.internal:8093;
+
+}
+```
+
+Después dentro de la directiva 'server' agregar un 'location' con un 'proxy_pass' asignando la "variable" que definimos en el 'upstream' (backend).
+
+```
+server {
+  listen 80 default_server;
+
+  location / {
+    proxy_pass http://backend;
+  }
+}
+```
+
 # Tips
 Para simular el ejercicio visitando una URL como 'web.test' o 'app.test' como dominio, en el archivo `'/etc/hosts'` en una mac, al final del archivo agregamos los siguientes datos:
 

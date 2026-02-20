@@ -30,6 +30,10 @@ Después de realizar los pasos anteriores reiniciamos el servidor y al consultar
 Primero voy a crear en la carpeta `'/usr/share/nginx/foo'` el archivo 'error.html' con el siguiente contenido: '404 No Found Page' y guardamos.
 En el archivo 'default.conf' al final de la directiva 'server' voy a agregar la siguiente linea `'error_page 404 /error.html'`, la directiva 'error_page' recibe como parámetros el código de error '404' y déspues el archivo 'error.html' a devolver, dado que en el contexto 'nginx' entiende que ya estamos en la carpeta con la directiva 'root' solo hacemos referencia al archivo.
 
+## Location
+La directiva `'location'` sirve para mapear una ruta específica que nosotros quieramos. Ya sea para autenticar usuarios, una redirección, etc...
+
+
 # Tips
 Para simular el ejercicio visitando una URL como 'web.test' o 'app.test' como dominio, en el archivo `'/etc/hosts'` en una mac, al final del archivo agregamos los siguientes datos:
 
@@ -51,4 +55,3 @@ Debes tener en cuenta que si tienes varias configuraciones, nginx tomará la pri
  - tienes dos archivos, 'apache.conf' y 'default.conf', por orden apache va primero y toma esa configuración, entonces deberías ver 'Apache' en el navegador
 
 Si tienes alguna configuración por default y quieres que la respete, editas ese archivo de configuración en la directiva de listen después del puerto agregas 'default_server', guardas y reinicias el servidor otra vez y listo, tienes 'Hola' como respuesta.
-

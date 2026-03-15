@@ -109,7 +109,7 @@ docker run --rm -p 80:80 -p 443:443 \
 --name nginx nginx:stable-alpine3.23
 ```
 
-Para poder visualizar el candado verder y no recibir la alerta de 'página insegura', voy a crear otro sitio en '/etc/nginx/condif.d', para intentar mantener un control, voy a crear un archivo diferente por sitio o rutas.
+Para poder visualizar el candado verder y no recibir la alerta de 'página insegura', voy a crear otro sitio en '/etc/nginx/conf.d', para intentar mantener un control, voy a crear un archivo diferente por sitio o rutas.
 
 ```bash
 vi ssl.conf

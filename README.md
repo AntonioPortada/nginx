@@ -81,6 +81,9 @@ server {
 }
 ```
 
+# Https (certificados)
+En está sección agregaré un dominio real y configuraré todo lo necesario para tener 'https' habilitado en mi sitio. Voy a usar la página [duckDNS](https://www.duckdns.org) para generarlos (en el proceso asumiré que ya se tiene el dns).
+
 # Tips
 Para simular el ejercicio visitando una URL como 'web.test' o 'app.test' como dominio, en el archivo `'/etc/hosts'` en una mac, al final del archivo agregamos los siguientes datos:
 

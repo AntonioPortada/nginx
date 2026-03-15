@@ -147,6 +147,21 @@ Thank you!
 Finalmente reiniciamos el servidor y veremos que todo funciona bien.
 Por ahora tenemos diferentes respuestas al consultar 'http' y 'https'.
 
+## Redireccionando 
+Para terminar el tema de los certificados y conexiones seguras, voy agregar el redireccionamiento y de esta forma, aunque escriba 'http://dominio.duckdns.org' siempre me llevará a 'https'.
+Ya que por el momento solo tenemos dos sitios el 'default.conf' y 'ssl.conf', solo es necesario editar el default para redireccionar todo el tráfico a la parte segura de nuestro sitio.
+
+```
+server {
+  
+  listen 80;
+  server_name tyj-tech.duckdns.org www.tyj-tech.duckdns.org;
+  
+  return 301 https://$server_name$request_uri;
+  
+}
+```
+
 # Tips
 Para simular el ejercicio visitando una URL como 'web.test' o 'app.test' como dominio, en el archivo `'/etc/hosts'` en una mac, al final del archivo agregamos los siguientes datos:
 

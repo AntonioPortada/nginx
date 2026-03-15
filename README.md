@@ -19,7 +19,10 @@ En la raiz del proyecto voy a crear las siguientes carpetas `'server/conf.d'` y 
 Después volvemos a ejecutar el contenedor con volumenes asignados a esas ruta y validamos que siga funcionando.
 
 ``` bash
-docker run --rm -p 80:80 -p 443:443 -v ./server/conf.d:/etc/nginx/conf.d -v ./server/nginx:/usr/share/nginx --name nginx nginx:stable-alpine3.23
+docker run --rm -p 80:80 -p 443:443 \
+-v ./server/conf.d:/etc/nginx/conf.d \
+-v ./server/nginx:/usr/share/nginx \
+--name nginx nginx:stable-alpine3.23
 ```
 
 ## Varios sitios
@@ -38,7 +41,8 @@ Nginx va a actuar como un proxy, en el caso de un 'proxy reversivo', se va a enc
 Ya que todo está siendo realizado usando docker, voy a crear otros dos contenedores con un servidor apache y otro nginx, el contenedor apache será mapeado al puerto 8080 y el nginx al 8081.
 
 ``` bash
-docker run -dp 8080:80 --name apache httpd && docker run -dp 8081:80 --name nginx-serve nginx
+docker run -dp 8080:80 --name apache httpd \
+&& docker run -dp 8081:80 --name nginx-serve nginx
 ``` 
 
 Después pegamos lo siguiente en el `'default.conf'` antes de la directiva `error_page`:
@@ -92,6 +96,56 @@ El siguiente comando nos solicitará algunos datos, ingresalos para continuar co
 ```bash
 sudo certbot certonly --standalone -d domain.duckdns.org
 ```
+
+## Agregando certificados
+Después de tener los certificados creados los mapeamos al docker y ejecutamos.
+
+```bash
+docker run --rm -p 80:80 -p 443:443 \
+-v ./server/conf.d:/etc/nginx/conf.d \
+-v ./server/nginx:/usr/share/nginx \
+-v /etc/letsencrypt/live/domain.duckdns.org/fullchain.pem:/etc/letsencrypt/live/domain.duckdns.org/fullchain.pem:ro \
+-v /etc/letsencrypt/live/domain.duckdns.org/privkey.pem:/etc/letsencrypt/live/domain.duckdns.org/privkey.pem:ro \
+--name nginx nginx:stable-alpine3.23
+```
+
+Para poder visualizar el candado verder y no recibir la alerta de 'página insegura', voy a crear otro sitio en '/etc/nginx/condif.d', para intentar mantener un control, voy a crear un archivo diferente por sitio o rutas.
+
+```bash
+vi ssl.conf
+```
+
+Después pegamos lo siguiente:
+
+```
+server {
+
+  listen 443 ssl;
+  server_name tyj-tech;
+  
+  ssl_certificate /etc/letsencrypt/live/tyj-tech.duckdns.org/fullchain.pem;ssl_certificate_key /etc/letsencrypt/live/tyj-tech.duckdns.org/privkey.pem;
+  
+  root /usr/share/nginx/ssl;
+
+}
+```
+
+Ahora creamos la respuesta del servidor. En la ruta '/usr/share/nginx/ssl' ejecutamos el siguiente comando.
+
+```bash
+vi index.html
+```
+
+Y por último pegamos esto:
+
+```
+This is the https version.
+<br/>
+Thank you!
+```
+
+Finalmente reiniciamos el servidor y veremos que todo funciona bien.
+Por ahora tenemos diferentes respuestas al consultar 'http' y 'https'.
 
 # Tips
 Para simular el ejercicio visitando una URL como 'web.test' o 'app.test' como dominio, en el archivo `'/etc/hosts'` en una mac, al final del archivo agregamos los siguientes datos:

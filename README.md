@@ -84,6 +84,15 @@ server {
 # Https (certificados)
 En está sección agregaré un dominio real y configuraré todo lo necesario para tener 'https' habilitado en mi sitio. Voy a usar la página [duckDNS](https://www.duckdns.org) para generarlos (en el proceso asumiré que ya se tiene el dns).
 
+## Creando certificado
+La herramienta que voy a usar para crear los certificados es `'certbot'`.
+Dado que por ahora el ejercicio lo estoy realizando con docker, el certificado se debe generar como 'standalone'.
+El siguiente comando nos solicitará algunos datos, ingresalos para continuar con el proceso. Al finalizar habrá creado la carpeta `'letsencrypt'`. Se debe correr como root.
+
+```bash
+sudo certbot certonly --standalone -d domain.duckdns.org
+```
+
 # Tips
 Para simular el ejercicio visitando una URL como 'web.test' o 'app.test' como dominio, en el archivo `'/etc/hosts'` en una mac, al final del archivo agregamos los siguientes datos:
 
